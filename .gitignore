@@ -1,0 +1,10 @@
+*.o
+*.elf
+*.bin
+*.img
+*.bak
+*.dat
+*.json
+
+.cache/
+.vscode/

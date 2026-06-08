@@ -1,0 +1,57 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-c",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-mcpu=cortex-a57",
+      "-fno-stack-protector",
+      "-ffreestanding",
+      "-fno-pic",
+      "-Iinclude",
+      "-mstrict-align",
+      "-o",
+      "init/main.o",
+      "init/main.c"
+    ],
+    "directory": "/media/austin/scratch/helix_board/sbl",
+    "file": "/media/austin/scratch/helix_board/sbl/init/main.c",
+    "output": "/media/austin/scratch/helix_board/sbl/init/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-c",
+      "-g",
+      "-o",
+      "arch/start.o",
+      "arch/start.s"
+    ],
+    "directory": "/media/austin/scratch/helix_board/sbl",
+    "file": "/media/austin/scratch/helix_board/sbl/arch/start.s",
+    "output": "/media/austin/scratch/helix_board/sbl/arch/start.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-c",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-mcpu=cortex-a57",
+      "-fno-stack-protector",
+      "-ffreestanding",
+      "-fno-pic",
+      "-Iinclude",
+      "-mstrict-align",
+      "-o",
+      "devices/uart.o",
+      "devices/uart.c"
+    ],
+    "directory": "/media/austin/scratch/helix_board/sbl",
+    "file": "/media/austin/scratch/helix_board/sbl/devices/uart.c",
+    "output": "/media/austin/scratch/helix_board/sbl/devices/uart.o"
+  }
+]

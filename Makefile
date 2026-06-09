@@ -52,13 +52,18 @@ LIB_OBJS	:= \
 	lib/strlen.o \
 	lib/utoa64.o
 
-MM_LIBS		:=
+MM_LIBS		:= \
+	mm/pmm.o \
+	mm/vmm.o \
+	mm/slab.o \
+	mm/alloc.o
 
 SRC_OBJS	:= \
 	init/main.o \
 	$(ARCH_LIBS) \
 	$(HW_OBJS) \
-	$(LIB_OBJS)
+	$(LIB_OBJS) \
+	$(MM_LIBS)
 
 
 

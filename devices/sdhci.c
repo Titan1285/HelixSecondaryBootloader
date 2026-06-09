@@ -2,7 +2,7 @@
 #include <devices/gicv3.h>
 #include <arch/irq.h>
 #include <stdio.h>
-//#include <mm/alloc.h>
+#include <mm/alloc.h>
 #include <stdlib.h>
 
 
@@ -185,7 +185,7 @@ void sdhci_init(void) {
     uint8_t power_ctrl = 0;
 
 
-    //sdhci = alloc(sizeof(sdhci_t));
+    sdhci = alloc(sizeof(sdhci_t));
 
     if (!sdhci) {
         printf("Failed to allocate SDHCI struct!\n");

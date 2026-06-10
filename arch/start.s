@@ -57,8 +57,7 @@ zero_bss_done:
     isb
 
     msr DAIFClr, #3
-    dsb sy
-    isb sy
+    isb
 
     b sbl_main
 

@@ -26,12 +26,6 @@ int sbl_main(void) {
     timer_init();
     sdhci_init();
 
-    printf("Testing timer...\n");
-    
-    timer_set_phys(10000);
-    timer_phys_enable();
-
-    printf("???\n");
 
     while(1);
 }

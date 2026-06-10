@@ -8,38 +8,31 @@
 
 
 _start:
+    mrs x4, sctlr_el2
+    bic x4, x4, #(1 << 0)   // M-bit
+    bic x4, x4, #(1 << 1)   // A-bit
+    bic x4, x4, #(1 << 2)   // C-bit
+    orr x4, x4, #(1 << 3)   // Stack alignment
+    bic x4, x4, #(1 << 12)  // I-bit
+    msr sctlr_el2, x4
+    isb
+
     // Setup and switch to EL1
     mrs x4, hcr_el2
     bic x4, x4, #(1 << 0)   // Virtualization disabled
-    bic x4, x4, #(1 << 1)
-    bic x4, x4, #(1 << 3)   // Physical IRQ's are not taken to EL2, virtual FIQ's are disabled
-    bic x4, x4, #(1 << 4)   // Physical IRQ's are not taken to EL2/EL3, virtual FIQ's are disabled
-    bic x4, x4, #(1 << 5)   // External aborts are not taken to EL2
-    bic x4, x4, #(1 << 12)  // Default cachability
+    orr x4, x4, #(1 << 3)   // Physical FIQ's are taken to EL2
+    orr x4, x4, #(1 << 4)   // Physical IRQ's are taken to EL2
+    orr x4, x4, #(1 << 5)   // External aborts are taken to EL2
     msr hcr_el2, x4
     isb
 
-    mrs x4, spsr_el2
-    bic x4, x4, #(1 << 4)   // EL1 is AARCH64
-    orr x4, x4, #(1 << 6)   // FIQ's masked in EL1
-    orr x4, x4, #(1 << 7)   // IRQ's masked in EL1
-    orr x4, x4, #(1 << 8)   // External aborts masked in EL1
-    orr x4, x4, #(8 << 0)   // EL1 uses SP_EL1
-    msr spsr_el2, x4
+    mrs x4, ICC_SRE_EL2
+    orr x4, x4, #(1 << 0)
+    orr x4, x4, #(1 << 1)
+    orr x4, x4, #(1 << 2)
+    orr x4, x4, #(1 << 3)
+    msr ICC_SRE_EL2, x4
     isb
-
-    // Set return address
-    adr x4, in_el1
-    msr elr_el2, x4
-    isb
-
-    // Drop to EL1
-    eret
-
-in_el1:
-    msr DAIFSet, #3
-    dsb sy
-    isb sy
 
     // Zero BSS section
     ldr x4, =__sbss
@@ -60,8 +53,12 @@ zero_bss_done:
 
     // Initialize vector table
     ldr x4, =vector_table
-    msr vbar_el2, x0
+    msr vbar_el2, x4
     isb
+
+    msr DAIFClr, #3
+    dsb sy
+    isb sy
 
     b sbl_main
 

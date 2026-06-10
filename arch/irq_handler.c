@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include <arch/arch.h>
 #include <devices/gicv3.h>
@@ -13,7 +14,9 @@
 
 
 
-static irq_handler_t irq_handlers[MAX_INTD];
+
+
+static volatile irq_handler_t irq_handlers[MAX_INTD];
 
 
 

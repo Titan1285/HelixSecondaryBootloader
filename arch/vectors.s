@@ -36,19 +36,19 @@
     stp x28, x29, [sp, #-16]!
     stp x30, xzr, [sp, #-16]!
     
-    mrs x0, esr_el1
-    mrs x1, far_el1
+    mrs x0, esr_el2
+    mrs x1, far_el2
     stp x0, x1, [sp, #-16]!
 
-    mrs x0, elr_el1
-    mrs x1, spsr_el1
+    mrs x0, elr_el2
+    mrs x1, spsr_el2
     stp x0, x1, [sp, #-16]!
 .endm
 
 .macro __restore_context
     ldp x0, x1, [sp], #16
-    msr elr_el1, x0
-    msr spsr_el1, x1
+    msr elr_el2, x0
+    msr spsr_el2, x1
 
     // Drop ESR and FAR
     ldp x0, x1, [sp], #16
@@ -126,47 +126,29 @@ sync_elx:
     __save_context
 
     mov x0, sp
-    //bl exc_handler
+    bl exc_handler
 
     __restore_context
     eret
 
 irq_elx:
     msr DAIFSet, #2
-    dsb sy
-    isb sy
+    isb
 
     // Save current context
     __save_context
 
-    //bl irq_handler
+    bl irq_handler
 
     __restore_context
     
     msr DAIFClr, #2
-    dsb sy
-    isb sy
+    isb
 
     eret
 
 fiq_elx:
-    msr DAIFSet, #3
-    dsb sy
-    isb sy
-
-    // Save current context
-    __save_context
-
-    //bl irq_handler
-
-_fiq_exit:
-    __restore_context
-    
-    msr DAIFClr, #3
-    dsb sy
-    isb sy
-
-    eret
+    b .
 
 serror_elx:
     b .

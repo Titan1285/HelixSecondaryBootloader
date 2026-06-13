@@ -10,6 +10,7 @@
 #define SDHCI_IRQ 65
 #define HELIX_SDHCI_BASE 0x01031000
 
+#define SDHCI_CADENCE_CORE_ADDR     0x200
 
 
 #define SDHCI_DMA_ADDR              0x000           // 64-bytes
@@ -237,10 +238,49 @@
 #define SDHCI_CAP_TIMEOUT_CLOCK_UNIT_KHZ    (0UL << 7UL)
 #define SDHCI_CAP_TIMEOUT_CLOCK_UNIT_MHZ    (1UL << 7UL)
 
+#define SDHCI_ADMA_ERROR_STATUS                   0x054           // 16-bytes
+#define ADMA_ERROR_LENGTH_MISMATCH          (1UL << 2UL)
+
+#define SDHCI_ADMA_SYSTEM_ADDRESS                 0x058           // 32-bytes
+#define ADMA_SYSTEM_ADMA2                   (2UL << 0UL)
+
+#define ADMA2_VALID    (1 << 0)
+#define ADMA2_END      (1 << 1)
+#define ADMA2_INT      (1 << 2)
+#define ADMA2_ACT1     (1 << 4) // Part of 0x2 (Transfer Data)
+#define ADMA2_ACT2     (1 << 5)
+
+
 // TODO: Get base clock from capabilites instead. Since this is QEMU, I won't worry
 #define SDHCI_BASE_CLOCK        50000000
 #define SDHCI_LOW_SPEED_MHZ     400000
 #define SDHCI_HIGH_SPEED_MHZ    25000000
+
+// SDHCI Cadence
+#define SDHCI_CDNS_HRS00		0x00	/* Controller Software Reset / Version info */
+#define  SDHCI_CDNS_HRS00_SWR           (1UL << 0UL)
+
+#define SDHCI_CDNS_HRS01		0x04	/* Slot Control and DMA Settings */
+
+#define SDHCI_CDNS_HRS04		0x10	/* PHY Memory Access Port (Crucial for high speed) */
+#define  SDHCI_CDNS_HRS04_ADDR(x)       (((x) & 0x1F) << 16)
+#define  SDHCI_CDNS_HRS04_WDATA(x)      (((x) & 0xFF) << 8)
+#define  SDHCI_CDNS_HRS04_RDATA(x)      (((x) & 0xFF) << 0)
+#define  SDHCI_CDNS_HRS04_RD            (1UL << 25UL)
+#define  SDHCI_CDNS_HRS04_WR            (1UL << 24UL)
+#define  SDHCI_CDNS_HRS04_ACK           (1UL << 26UL)
+
+#define SDHCI_CDNS_HRS06		0x18	/* Mode Control Register */
+#define  SDHCI_CDNS_HRS06_TUNE_UP       (1UL << 15UL)
+#define  SDHCI_CDNS_HRS06_TUNE          (1UL << 14UL)
+#define  SDHCI_CDNS_HRS06_MODE_MASK     0x7UL
+#define  SDHCI_CDNS_HRS06_MODE_SD       0x0UL   /* Standard SD Card Mode */
+#define  SDHCI_CDNS_HRS06_MODE_MMC_SDR  0x2UL   /* eMMC Single Data Rate */
+#define  SDHCI_CDNS_HRS06_MODE_MMC_DDR  0x3UL   /* eMMC Dual Data Rate */
+
+
+
+
 
 
 
@@ -255,10 +295,15 @@ typedef struct {
     uint32_t    block_size;
     uint32_t    base_clock;
     uint16_t    rca;
-    uint32_t    cid[4];
+    uint32_t    cid[16];
     uint32_t    csd[4];
-} sdhci_t;
+} __attribute__((packed)) sdhci_t;
 
+typedef struct {
+    uint16_t    attributes;
+    uint16_t    len;
+    uint32_t    addr;
+} __attribute__((packed, aligned(4))) sdhci_adma_desc_t;
 
 
 
@@ -275,5 +320,6 @@ void sdhci_set_clock(uint32_t target);
 void sdhci_irq_handler(void);
 int sdhci_read_block(uint32_t lba, uint8_t *buf);
 int sdhci_read_blocks(uint32_t lba, uint32_t length, uint8_t *buf);
+int sdhci_dma_read(uint32_t lba, uint32_t length, uint8_t *buf);
 
 #endif

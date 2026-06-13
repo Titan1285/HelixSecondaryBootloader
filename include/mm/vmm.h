@@ -65,4 +65,20 @@
 #define PTE_DEVICE_RW_NX    (PTE_VALID | PTE_PAGE | PTE_NS | PTE_RW_NA_EL0 | PTE_SH_INNER | PTE_AF | PTE_UXN | PTE_PXN | PTE_ATTR_DEVICE)
 #define PTE_DEVICE_RO_NX    (PTE_VALID | PTE_PAGE | PTE_NS | PTE_RO_NA_EL0 | PTE_SH_INNER | PTE_AF | PTE_UXN | PTE_PXN | PTE_ATTR_DEVICE)
 
+
+
+
+
+
+
+
+
+
+void vmm_init(void);
+uint64_t *vmm_page_table_alloc(void);
+void vmm_map_page(uint64_t virt, uint64_t phys, uint64_t flags);
+void vmm_map_page_range(uint64_t virt, uint64_t phys, uint64_t num_pages, uint64_t flags);
+void vmm_unmap_page(uint64_t virt, uint64_t phys);
+void vmm_unmap_page_range(uint64_t virt, uint64_t phys, uint64_t num_pages);
+
 #endif

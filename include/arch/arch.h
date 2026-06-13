@@ -56,63 +56,62 @@
 #define TCR_T0SZ(x)     ((uint64_t)(x) << 0ULL)
 #define TCR_T1SZ(x)     ((uint64_t)(x) << 16ULL)
 
-#define TCR_EPD0_ENABLE    (0ULL << 7)
-#define TCR_EPD0_DISABLE   (1ULL << 7)
+#define TCR_EPD0_ENABLE    (0ULL << 7ULL)
+#define TCR_EPD0_DISABLE   (1ULL << 7ULL)
 
-#define TCR_EPD1_ENABLE    (0ULL << 23)
-#define TCR_EPD1_DISABLE   (1ULL << 23)
+#define TCR_EPD1_ENABLE    (0ULL << 23ULL)
+#define TCR_EPD1_DISABLE   (1ULL << 23ULL)
 
-#define TCR_IRGN0_NC       (0ULL << 8)
-#define TCR_IRGN0_WBWA     (1ULL << 8)
-#define TCR_IRGN0_WT       (2ULL << 8)
-#define TCR_IRGN0_WB       (3ULL << 8)
+#define TCR_IRGN0_NC       (0ULL << 8ULL)
+#define TCR_IRGN0_WBWA     (1ULL << 8ULL)
+#define TCR_IRGN0_WT       (2ULL << 8ULL)
+#define TCR_IRGN0_WB       (3ULL << 8ULL)
 
-#define TCR_ORGN0_NC       (0ULL << 10)
-#define TCR_ORGN0_WBWA     (1ULL << 10)
-#define TCR_ORGN0_WT       (2ULL << 10)
-#define TCR_ORGN0_WB       (3ULL << 10)
+#define TCR_ORGN0_NC       (0ULL << 10ULL)
+#define TCR_ORGN0_WBWA     (1ULL << 10ULL)
+#define TCR_ORGN0_WT       (2ULL << 10ULL)
+#define TCR_ORGN0_WB       (3ULL << 10ULL)
 
-#define TCR_IRGN1_NC       (0ULL << 24)
-#define TCR_IRGN1_WBWA     (1ULL << 24)
-#define TCR_IRGN1_WT       (2ULL << 24)
-#define TCR_IRGN1_WB       (3ULL << 24)
+#define TCR_IRGN1_NC       (0ULL << 24ULL)
+#define TCR_IRGN1_WBWA     (1ULL << 24ULL)
+#define TCR_IRGN1_WT       (2ULL << 24ULL)
+#define TCR_IRGN1_WB       (3ULL << 24ULL)
 
-#define TCR_ORGN1_NC       (0ULL << 26)
-#define TCR_ORGN1_WBWA     (1ULL << 26)
-#define TCR_ORGN1_WT       (2ULL << 26)
-#define TCR_ORGN1_WB       (3ULL << 26)
+#define TCR_ORGN1_NC       (0ULL << 26ULL)
+#define TCR_ORGN1_WBWA     (1ULL << 26ULL)
+#define TCR_ORGN1_WT       (2ULL << 26ULL)
+#define TCR_ORGN1_WB       (3ULL << 26ULL)
 
-#define TCR_SH0_NS         (0ULL << 12)
-#define TCR_SH0_OS         (2ULL << 12)
-#define TCR_SH0_IS         (3ULL << 12)
+#define TCR_SH0_NS         (0ULL << 12ULL)
+#define TCR_SH0_OS         (2ULL << 12ULL)
+#define TCR_SH0_IS         (3ULL << 12ULL)
 
-#define TCR_SH1_NS         (0ULL << 28)
-#define TCR_SH1_OS         (2ULL << 28)
-#define TCR_SH1_IS         (3ULL << 28)
+#define TCR_SH1_NS         (0ULL << 28ULL)
+#define TCR_SH1_OS         (2ULL << 28ULL)
+#define TCR_SH1_IS         (3ULL << 28ULL)
 
-#define TCR_TG0_4KB        (0ULL << 14)
-#define TCR_TG0_64KB       (1ULL << 14)
+#define TCR_TG0_4KB        (0ULL << 14ULL)
+#define TCR_TG0_64KB       (1ULL << 14ULL)
 
-#define TCR_TG1_4KB        (2ULL << 30)
-#define TCR_TG1_64KB       (3ULL << 30)
+#define TCR_TG1_4KB        (2ULL << 30ULL)
+#define TCR_TG1_64KB       (3ULL << 30ULL)
 
-#define TCR_A1_USE_TTBR0   (0ULL << 22)
-#define TCR_A1_USE_TTBR1   (1ULL << 22)
+#define TCR_A1_USE_TTBR0   (0ULL << 22ULL)
+#define TCR_A1_USE_TTBR1   (1ULL << 22ULL)
 
-#define TCR_IPS_32BIT      (0ULL << 32)
-#define TCR_IPS_36BIT      (1ULL << 32)
-#define TCR_IPS_40BIT      (2ULL << 32)
+#define TCR_IPS_32BIT      (0ULL << 32ULL)
+#define TCR_IPS_36BIT      (1ULL << 32ULL)
+#define TCR_IPS_40BIT      (2ULL << 32ULL)
+#define TCR_IPS_48BIT      (5ULL << 32ULL)
 
-#define TCR_ASID_8BIT      (0ULL << 36)
+#define TCR_ASID_8BIT      (0ULL << 36ULL)
 
-#define TCR_TBI0_USED      (0ULL << 37)
-#define TCR_TBI0_IGNORED   (1ULL << 37)
+#define TCR_TBI0_USED      (0ULL << 37ULL)
+#define TCR_TBI0_IGNORED   (1ULL << 37ULL)
 
-#define TCR_TBI1_USED      (0ULL << 38)
-#define TCR_TBI1_IGNORED   (1ULL << 38)
+#define TCR_TBI1_USED      (0ULL << 38ULL)
+#define TCR_TBI1_IGNORED   (1ULL << 38ULL)
 
-#define SCTLR_EE_LE         (0ULL << 25ULL)
-#define SCTLR_EE_BE         (1ULL << 25ULL)
 #define SCTLR_ICACHE_ENABLE (1ULL << 12ULL)
 #define SCTLR_DCACHE_ENABLE (1ULL << 2ULL)
 #define SCTLR_MMU_ENABLE    (1ULL << 0ULL)
@@ -205,5 +204,20 @@ extern void icc_bpr1_write(uint64_t val);
 extern uint64_t icc_iar1_el1_read(void);
 extern void icc_eoir1_el1_write(uint64_t val);
 extern void icc_ctlr_el1_write(uint64_t val);
+
+extern uint64_t ttbr0_el2_read(void);
+extern void ttbr0_el2_write(uint64_t addr);
+
+extern uint64_t tcr_el2_read(void);
+extern void tcr_el2_write(uint64_t val);
+
+extern uint64_t sctlr_el2_read(void);
+extern void sctlr_el2_write(uint64_t val);
+
+extern uint64_t get_icache_line_size(void);
+extern uint64_t get_dcache_line_size(void);
+extern void flush_cache_range(uint64_t base_addr, size_t length);
+
+extern void arch_jump_ub(uint64_t addr);
 
 #endif

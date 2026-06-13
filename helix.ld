@@ -19,7 +19,7 @@ PHDRS
 SECTIONS
 {
     /* NOTE: update address if this changes in ROM */
-    . = 0x00022428;
+    . = 0x00022450;
 
     .text : {
         __stext = .;

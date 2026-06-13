@@ -10,6 +10,7 @@ ASFLAGS	?= -g
 
 CFLAGS	?=	\
 	-g \
+	-O0 \
 	-Wall	\
 	-Wextra \
 	-nostdlib \
@@ -18,6 +19,7 @@ CFLAGS	?=	\
 	-ffreestanding \
 	-fno-pic \
 	-Iinclude \
+	-mgeneral-regs-only \
 	-mstrict-align
 
 
@@ -26,7 +28,8 @@ ARCH_LIBS	:= \
 	arch/vectors.o \
 	arch/arch.o \
 	arch/irq_handler.o \
-	arch/exc_handler.o
+	arch/exc_handler.o \
+	arch/cache.o
 
 HW_OBJS		:= \
 	devices/timer.o \
@@ -54,7 +57,6 @@ LIB_OBJS	:= \
 
 MM_LIBS		:= \
 	mm/pmm.o \
-	mm/vmm.o \
 	mm/slab.o \
 	mm/alloc.o
 

@@ -15,7 +15,7 @@
 #define SLAB_SIZE_MAX       2048ULL
 
 #define SLAB_SIZE           (65536 * 1024)
-#define SLAB_PHYS_BASE      0x40100000
+#define SLAB_PHYS_BASE      0x50000000
 #define SLAB_PHYS_END       (SLAB_PHYS_BASE + SLAB_SIZE)
 
 

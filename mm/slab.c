@@ -4,6 +4,9 @@
 #include <mm/vmm.h>
 #include <mm/slab.h>
 #include <stdbool.h>
+#include <arch/arch.h>
+
+
 
 
 
@@ -152,6 +155,10 @@ slab_t *slab_create_new(size_t obj_size) {
     if (slab_phys_base >= slab_phys_end) {
         return NULL;
     }
+
+    // Identity map slab page
+    //vmm_map_page(slab_phys_base, (uint64_t)slab, PTE_NORMAL_RW);
+    //flush_cache_range((uint64_t)slab, PAGE_SIZE);
 
     slab->obj_size = obj_size;
     slab->used_objs = 0;

@@ -8,6 +8,10 @@
 
 
 _start:
+    msr DAIFSet, #3
+    dsb sy
+    isb
+
     mrs x4, sctlr_el2
     bic x4, x4, #(1 << 0)   // M-bit
     bic x4, x4, #(1 << 1)   // A-bit
@@ -34,6 +38,12 @@ _start:
     msr ICC_SRE_EL2, x4
     isb
 
+    // Enable FPU in EL2
+    mrs x4, cptr_el2
+    bic x4, x4, #(1 << 10)
+    msr cptr_el2, x4
+    isb
+
     // Zero BSS section
     ldr x4, =__sbss
     ldr x5, =__ebss
@@ -47,7 +57,7 @@ zero_bss_loop:
 
 zero_bss_done:
 
-    // TODO: Set stack within SRAM...?
+    // Init stack space at end of DRAM (TODO: Maybe place in better location?)
     ldr x4, =0x60000000
     mov sp, x4
 
@@ -57,6 +67,7 @@ zero_bss_done:
     isb
 
     msr DAIFClr, #3
+    dsb sy
     isb
 
     b sbl_main

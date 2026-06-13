@@ -95,7 +95,7 @@ void exc_handler(cpu_ctx_t *ctx) {
     fsc = iss & 0x3F;
 
 
-    printf("\033[031mKernel exception!\033[0m\n");
+    printf("\033[031mBootloader exception!\033[0m\n");
     printf("ESR: %llx FAR: %llx ELR: %llx SPSR: %llx\n\n", ctx->esr_el1, ctx->far_el1, ctx->elr_el1, ctx->spsr_el1);
 
     switch(ec) {

@@ -22,36 +22,70 @@ static sdhci_t *sdhci = NULL;
 
 
 
-static inline uint64_t sdhci_read64(uint64_t offset) {
-    return *(volatile uint64_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
-}
-
-static inline void sdhci_write64(uint64_t offset, uint64_t val) {
-    *(volatile uint64_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
-}
-
-static inline uint32_t sdhci_read32(uint32_t offset) {
+static inline uint64_t sdhci_cdns_read64(uint64_t offset) {
     return *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
 }
 
-static inline void sdhci_write32(uint32_t offset, uint32_t val) {
+static inline void sdhci_cdns_write64(uint64_t offset, uint64_t val) {
+    *(volatile uint64_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
+}
+
+static inline uint32_t sdhci_cdns_read32(uint32_t offset) {
+    return *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
+}
+
+static inline void sdhci_cdns_write32(uint32_t offset, uint32_t val) {
     *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
 }
 
-static inline uint16_t sdhci_read16(uint16_t offset) {
-    return *(volatile uint16_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
+static inline uint16_t sdhci_cdns_read16(uint16_t offset) {
+    return *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
 }
 
-static inline void sdhci_write16(uint16_t offset, uint16_t val) {
+static inline void sdhci_cdns_write16(uint16_t offset, uint16_t val) {
     *(volatile uint16_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
 }
 
+static inline uint8_t sdhci_cdns_read8(uint8_t offset) {
+    return *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
+}
+
+static inline void sdhci_cdns_write8(uint8_t offset, uint8_t val) {
+    *(volatile uint8_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
+}
+
+
+
+static inline uint64_t sdhci_read64(uint64_t offset) {
+    return *(volatile uint64_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset);
+}
+
+static inline void sdhci_write64(uint64_t offset, uint64_t val) {
+    *(volatile uint64_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset) = val;
+}
+
+static inline uint32_t sdhci_read32(uint32_t offset) {
+    return *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset);
+}
+
+static inline void sdhci_write32(uint32_t offset, uint32_t val) {
+    *(volatile uint32_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset) = val;
+}
+
+static inline uint16_t sdhci_read16(uint16_t offset) {
+    return *(volatile uint16_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset);
+}
+
+static inline void sdhci_write16(uint16_t offset, uint16_t val) {
+    *(volatile uint16_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset) = val;
+}
+
 static inline uint8_t sdhci_read8(uint8_t offset) {
-    return *(volatile uint8_t *)((uintptr_t)HELIX_SDHCI_BASE + offset);
+    return *(volatile uint8_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset);
 }
 
 static inline void sdhci_write8(uint8_t offset, uint8_t val) {
-    *(volatile uint8_t *)((uintptr_t)HELIX_SDHCI_BASE + offset) = val;
+    *(volatile uint8_t *)((uintptr_t)HELIX_SDHCI_BASE + SDHCI_CADENCE_CORE_ADDR + offset) = val;
 }
 
 
@@ -64,20 +98,38 @@ static inline void sdhci_write8(uint8_t offset, uint8_t val) {
 
 
 void sdhci_reset(void) {
-    int timeout = 100000;
+    // int timeout = 100000;
 
-    // Trigger SDHCI controller reset
-    sdhci_write8(SDHCI_SOFTWARE_RESET, SDHCI_RESET_ALL);
+    // // Trigger SDHCI controller reset
+    // sdhci_write8(SDHCI_SOFTWARE_RESET, SDHCI_RESET_ALL);
 
-    // Wait for hardware to clear reset bit
-    while(sdhci_read8(SDHCI_SOFTWARE_RESET) & SDHCI_RESET_ALL) {
-        timeout--;
+    // // Wait for hardware to clear reset bit
+    // while(sdhci_read8(SDHCI_SOFTWARE_RESET) & SDHCI_RESET_ALL) {
+    //     timeout--;
 
-        if (timeout == 0) {
-            printf("SDHCI reset failed!\n");
-            break;
-        }
-    }
+    //     if (timeout == 0) {
+    //         printf("SDHCI reset failed!\n");
+    //         break;
+    //     }
+    // }
+
+    // // NOTE:
+    // // Now that this was changed to SDHCI cadence, we have to switch the device back into generic SD operations
+    // // This was done, so that I can still use U-Boot for the MMC, but won't have to re-write my SDHCI code, or have to
+    // // implement a new SDHCI driver in U-Boot
+
+    // // Reset EMMC
+    // uint32_t hrs00 = sdhci_cdns_read32(SDHCI_CDNS_HRS00);
+    // sdhci_cdns_write32(SDHCI_CDNS_HRS00,  hrs00 | SDHCI_CDNS_HRS00_SWR);
+
+    // // Wait for reset bit to clear
+    // while(sdhci_cdns_read32(SDHCI_CDNS_HRS00) & SDHCI_CDNS_HRS00_SWR);
+
+    // // Set to generic SD operation
+    // uint32_t hrs06 = sdhci_read32(SDHCI_CDNS_HRS06);
+    // hrs06 &= ~(SDHCI_CDNS_HRS06_MODE_MASK);
+    // hrs06 |= SDHCI_CDNS_HRS06_MODE_SD;
+    // sdhci_cdns_write32(SDHCI_CDNS_HRS06, hrs06);
 }
 
 void sdhci_set_clock(uint32_t target) {
@@ -259,8 +311,7 @@ void sdhci_init(void) {
         resp = sdhci_read32(SDHCI_RESPONSE);
 
         if (resp & (1UL << 31UL)) {
-            printf("ACMD41 complete! (resp = %x)\n", resp
-            );
+            printf("ACMD41 complete! (resp = %x)\n", resp);
             break;
         } else {
             printf("ACMD41 failed! (resp = %x)\n", resp);
@@ -280,12 +331,57 @@ void sdhci_init(void) {
         return;
     }
 
-    sdhci->cid[0] = sdhci_read32(SDHCI_RESPONSE0);
-    sdhci->cid[1] = sdhci_read32(SDHCI_RESPONSE1);
-    sdhci->cid[2] = sdhci_read32(SDHCI_RESPONSE2);
-    sdhci->cid[3] = sdhci_read32(SDHCI_RESPONSE3);
+    uint32_t resp0 = sdhci_read32(SDHCI_RESPONSE0);
+    uint32_t resp1 = sdhci_read32(SDHCI_RESPONSE1);
+    uint32_t resp2 = sdhci_read32(SDHCI_RESPONSE2);
+    uint32_t resp3 = sdhci_read32(SDHCI_RESPONSE3);
 
-    printf("SDHCI CID RESP: %x %x %x %x\n", sdhci->cid[0], sdhci->cid[1], sdhci->cid[2], sdhci->cid[3]);
+    sdhci->cid[0]  = (resp3 >> 24) & 0xFF; // MID
+    sdhci->cid[1]  = (resp3 >> 16) & 0xFF; // OID [1]
+    sdhci->cid[2]  = (resp3 >> 8)  & 0xFF; // OID [0]
+    sdhci->cid[3]  = (resp3)       & 0xFF; // PNM [4]
+    sdhci->cid[4]  = (resp2 >> 24) & 0xFF; // PNM [3]
+    sdhci->cid[5]  = (resp2 >> 16) & 0xFF; // PNM [2]
+    sdhci->cid[6]  = (resp2 >> 8)  & 0xFF; // PNM [1]
+    sdhci->cid[7]  = (resp2)       & 0xFF; // PNM [0]
+    sdhci->cid[8]  = (resp1 >> 24) & 0xFF; // PRV
+    sdhci->cid[9]  = (resp1 >> 16) & 0xFF; // PSN [3]
+    sdhci->cid[10] = (resp1 >> 8)  & 0xFF; // PSN [2]
+    sdhci->cid[11] = (resp1)       & 0xFF; // PSN [1]
+    sdhci->cid[12] = (resp0 >> 24) & 0xFF; // PSN [0]
+    sdhci->cid[13] = (resp0 >> 16) & 0xFF; // MDT [1] (Year)
+    sdhci->cid[14] = (resp0 >> 8)  & 0xFF; // MDT [0] (Month)
+    sdhci->cid[15] = (resp0)       & 0xFF; // CRC7 + End bitcid[0]  = (resp3 >> 24) & 0xFF; // MID
+    sdhci->cid[1]  = (resp3 >> 16) & 0xFF; // OID [1]
+    sdhci->cid[2]  = (resp3 >> 8)  & 0xFF; // OID [0]
+    sdhci->cid[3]  = (resp3)       & 0xFF; // PNM [4]
+    sdhci->cid[4]  = (resp2 >> 24) & 0xFF; // PNM [3]
+    sdhci->cid[5]  = (resp2 >> 16) & 0xFF; // PNM [2]
+    sdhci->cid[6]  = (resp2 >> 8)  & 0xFF; // PNM [1]
+    sdhci->cid[7]  = (resp2)       & 0xFF; // PNM [0]
+    sdhci->cid[8]  = (resp1 >> 24) & 0xFF; // PRV
+    sdhci->cid[9]  = (resp1 >> 16) & 0xFF; // PSN [3]
+    sdhci->cid[10] = (resp1 >> 8)  & 0xFF; // PSN [2]
+    sdhci->cid[11] = (resp1)       & 0xFF; // PSN [1]
+    sdhci->cid[12] = (resp0 >> 24) & 0xFF; // PSN [0]
+    sdhci->cid[13] = (resp0 >> 16) & 0xFF; // MDT [1] (Year)
+    sdhci->cid[14] = (resp0 >> 8)  & 0xFF; // MDT [0] (Month)
+    sdhci->cid[15] = (resp0)       & 0xFF; // CRC7 + End bit
+
+    char pnm[6];
+    pnm[0] = sdhci->cid[4];
+    pnm[1] = sdhci->cid[5];
+    pnm[2] = sdhci->cid[6];
+    pnm[3] = sdhci->cid[7];
+    pnm[4] = ' ';
+    pnm[5] = '\0'; // Null terminator
+
+    printf("SDHCI: Product name: %s\n", pnm);
+
+    uint8_t major = (sdhci->cid[8] >> 4) & 0x0F;
+    uint8_t minor = sdhci->cid[8] & 0x0F;
+
+    printf("SDHCI revision: %d.%d\n", major, minor);
 
     ret = sdhci_send_cmd(3, 0, 0x0001);
 
@@ -295,8 +391,6 @@ void sdhci_init(void) {
 
     resp = sdhci_read32(SDHCI_RESPONSE);
     sdhci->rca = (resp >> 16) & 0xFFFF;
-
-    printf("RCA = %x\n", sdhci->rca);
 
     uint32_t arg = ((uint32_t)sdhci->rca) << 16;
 
@@ -311,8 +405,6 @@ void sdhci_init(void) {
     sdhci->csd[1] = sdhci_read32(SDHCI_RESPONSE1);
     sdhci->csd[2] = sdhci_read32(SDHCI_RESPONSE2);
     sdhci->csd[3] = sdhci_read32(SDHCI_RESPONSE3);
-
-    printf("CSD: %x %x %x %x\n", sdhci->csd[0], sdhci->csd[1], sdhci->csd[2], sdhci->csd[3]);
 
     ret = sdhci_send_cmd(7, arg, SDHCI_RESP_TYPE_LEN_48 | SDHCI_CMD_CRC_CHK_EN | SDHCI_CMD_INDEX_CHK_EN);
 
@@ -412,6 +504,49 @@ int sdhci_read_blocks(uint32_t lba, uint32_t length, uint8_t *buf) {
         i++;
         lba_base++;
         blocks--;
+    }
+
+    return 0;
+}
+
+int sdhci_dma_read(uint32_t lba, uint32_t length, uint8_t *buf) {
+    int ret = 0;
+    sdhci_adma_desc_t *desc = NULL;
+    uint32_t blocks = 0;
+
+
+
+
+    if (!buf) {
+        return -1;
+    }
+
+    // TODO: Maybe make this global?
+    desc = alloc(sizeof(sdhci_adma_desc_t));
+
+    if (!desc) {
+        printf("Failed to allocate SDHCI ADMA descriptor!\n");
+        return -1;
+    }
+
+    blocks = length / sdhci->block_size;
+
+    desc->addr = (uint64_t)buf;
+    desc->len = blocks * 512;
+    desc->attributes = ADMA2_VALID | ADMA2_END | ADMA2_ACT2;
+
+    sdhci_write32(SDHCI_ADMA_SYSTEM_ADDRESS, (uint64_t)desc);
+
+    sdhci_write16(SDHCI_BLOCK_SIZE, sdhci->block_size);
+    sdhci_write16(SDHCI_BLOCK_COUNT, blocks);
+
+    sdhci_write16(SDHCI_TRANSFER_MODE, SDHCI_BLOCK_EN | SDHCI_MULTI_BLOCK_SEL | SDHCI_DMA_EN | SDHCI_AUTO_CMD12_EN);
+    
+    ret = sdhci_send_cmd(18, lba * 512, SDHCI_RESP_TYPE_LEN_48 | SDHCI_CMD_CRC_CHK_EN | SDHCI_DATA_PRESENT_SEL);
+
+    if (ret < 0) {
+        printf("SDHCI CMD18 failed!\n");
+        return ret;
     }
 
     return 0;

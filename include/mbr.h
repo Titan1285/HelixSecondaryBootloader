@@ -21,4 +21,16 @@ typedef struct {
     uint16_t        boot_signature;
 } __attribute__((packed)) mbr_t;
 
+
+
+
+
+
+
+
+
+
+void mbr_init(void);
+mbr_partition_t *mbr_partition_get_by_index(uint32_t idx);
+
 #endif

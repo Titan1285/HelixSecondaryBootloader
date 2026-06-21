@@ -7,7 +7,7 @@
 
 
 
-#define SDHCI_IRQ 65
+#define SDHCI_IRQ 61
 #define HELIX_SDHCI_BASE 0x01031000
 
 #define SDHCI_CADENCE_CORE_ADDR     0x200

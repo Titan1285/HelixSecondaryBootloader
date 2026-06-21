@@ -34,6 +34,7 @@ void *alloc(size_t length) {
         return ptr;
     }
 
+    // TODO: Fix slab allocator somehow allocating 2048 bytes in a 128 byte object...
     ptr = slab_alloc(length);
 
     if (!ptr) {

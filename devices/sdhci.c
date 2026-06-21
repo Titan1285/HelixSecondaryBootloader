@@ -98,38 +98,38 @@ static inline void sdhci_write8(uint8_t offset, uint8_t val) {
 
 
 void sdhci_reset(void) {
-    // int timeout = 100000;
+    int timeout = 100000;
 
-    // // Trigger SDHCI controller reset
-    // sdhci_write8(SDHCI_SOFTWARE_RESET, SDHCI_RESET_ALL);
+    // Trigger SDHCI controller reset
+    sdhci_write8(SDHCI_SOFTWARE_RESET, SDHCI_RESET_ALL);
 
-    // // Wait for hardware to clear reset bit
-    // while(sdhci_read8(SDHCI_SOFTWARE_RESET) & SDHCI_RESET_ALL) {
-    //     timeout--;
+    // Wait for hardware to clear reset bit
+    while(sdhci_read8(SDHCI_SOFTWARE_RESET) & SDHCI_RESET_ALL) {
+        timeout--;
 
-    //     if (timeout == 0) {
-    //         printf("SDHCI reset failed!\n");
-    //         break;
-    //     }
-    // }
+        if (timeout == 0) {
+            printf("SDHCI reset failed!\n");
+            break;
+        }
+    }
 
-    // // NOTE:
-    // // Now that this was changed to SDHCI cadence, we have to switch the device back into generic SD operations
-    // // This was done, so that I can still use U-Boot for the MMC, but won't have to re-write my SDHCI code, or have to
-    // // implement a new SDHCI driver in U-Boot
+    // NOTE:
+    // Now that this was changed to SDHCI cadence, we have to switch the device back into generic SD operations
+    // This was done, so that I can still use U-Boot for the MMC, but won't have to re-write my SDHCI code, or have to
+    // implement a new SDHCI driver in U-Boot
 
-    // // Reset EMMC
-    // uint32_t hrs00 = sdhci_cdns_read32(SDHCI_CDNS_HRS00);
-    // sdhci_cdns_write32(SDHCI_CDNS_HRS00,  hrs00 | SDHCI_CDNS_HRS00_SWR);
+    // Reset EMMC
+    uint32_t hrs00 = sdhci_cdns_read32(SDHCI_CDNS_HRS00);
+    sdhci_cdns_write32(SDHCI_CDNS_HRS00,  hrs00 | SDHCI_CDNS_HRS00_SWR);
 
-    // // Wait for reset bit to clear
-    // while(sdhci_cdns_read32(SDHCI_CDNS_HRS00) & SDHCI_CDNS_HRS00_SWR);
+    // Wait for reset bit to clear
+    while(sdhci_cdns_read32(SDHCI_CDNS_HRS00) & SDHCI_CDNS_HRS00_SWR);
 
-    // // Set to generic SD operation
-    // uint32_t hrs06 = sdhci_read32(SDHCI_CDNS_HRS06);
-    // hrs06 &= ~(SDHCI_CDNS_HRS06_MODE_MASK);
-    // hrs06 |= SDHCI_CDNS_HRS06_MODE_SD;
-    // sdhci_cdns_write32(SDHCI_CDNS_HRS06, hrs06);
+    // Set to generic SD operation
+    uint32_t hrs06 = sdhci_cdns_read32(SDHCI_CDNS_HRS06);
+    hrs06 &= ~(SDHCI_CDNS_HRS06_MODE_MASK);
+    hrs06 |= SDHCI_CDNS_HRS06_MODE_SD;
+    sdhci_cdns_write32(SDHCI_CDNS_HRS06, hrs06);
 }
 
 void sdhci_set_clock(uint32_t target) {

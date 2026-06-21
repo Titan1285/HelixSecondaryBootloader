@@ -2,6 +2,10 @@
 #define GPT_H
 
 #include <stdint.h>
+#include <uchar.h>
+
+
+
 
 
 
@@ -41,7 +45,22 @@ typedef struct {
     uint64_t    lba_start;
     uint64_t    lba_end;
     uint64_t    attributes;
-    uint8_t     partition_name[32];
+    uint8_t     partition_name[36];
 } __attribute__((packed)) gpt_partition_t;
+
+
+
+
+
+
+
+
+
+
+
+void gpt_init(void);
+uint32_t gpt_partition_get_index(const char *s);
+uint64_t gpt_partition_get_offset(uint32_t idx);
+size_t gpt_partition_get_size(uint32_t idx);
 
 #endif

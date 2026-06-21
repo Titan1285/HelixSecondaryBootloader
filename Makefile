@@ -20,7 +20,9 @@ CFLAGS	?=	\
 	-fno-pic \
 	-Iinclude \
 	-mgeneral-regs-only \
-	-mstrict-align
+	-mstrict-align \
+	-Wno-unused-function \
+	-Wno-unused-variable
 
 
 ARCH_LIBS	:= \
@@ -35,7 +37,11 @@ HW_OBJS		:= \
 	devices/timer.o \
 	devices/sdhci.o \
 	devices/gicv3.o \
-	devices/uart.o
+	devices/uart.o \
+	devices/fw_cfg.o
+
+GFX_LIBS	:= \
+	gfx/put_pixel.o
 
 LIB_OBJS	:= \
 	lib/puts.o \
@@ -53,7 +59,12 @@ LIB_OBJS	:= \
 	lib/strrev.o \
 	lib/vprintf.o \
 	lib/strlen.o \
-	lib/utoa64.o
+	lib/utoa64.o \
+	lib/strcmp.o \
+	lib/pkg.o \
+	lib/mbr.o \
+	lib/gpt.o \
+	lib/utf16_to_utf8.o
 
 MM_LIBS		:= \
 	mm/pmm.o \
@@ -65,7 +76,8 @@ SRC_OBJS	:= \
 	$(ARCH_LIBS) \
 	$(HW_OBJS) \
 	$(LIB_OBJS) \
-	$(MM_LIBS)
+	$(MM_LIBS) \
+	$(GFX_LIBS)
 
 
 

@@ -82,28 +82,36 @@ void pmm_init(void) {
 }
 
 static void *pmm_inner_alloc(size_t num_pages, size_t limit) {
-    size_t pages = 0, page = 0;
+    size_t run_start = 0;
+    size_t run_length = 0;
 
 
-    while(pmm.last_used_idx < limit) {
-        if (!pmm_test_bit(pmm.last_used_idx++)) {
-            if (pages++ == num_pages) {
-                page = pmm.last_used_idx - pages;
 
-                for (size_t i = page; i < pmm.last_used_idx; i++) {
-                    pmm_set_bit(i);
-                }
+    
+    while (pmm.last_used_idx < limit) {
+        if (!pmm_test_bit(pmm.last_used_idx)) {
+            if (run_length == 0) {
+                run_start = pmm.last_used_idx;
             }
 
-            return (void *)(pmm.ram_base + page * PAGE_SIZE);
+            run_length++;
+
+            if (run_length >= num_pages) {
+                for (size_t i = run_start; i < run_start + num_pages; i++) {
+                    pmm_set_bit(i);
+                }
+
+                return (void *)(pmm.ram_base + (run_start * PAGE_SIZE));
+            }
         } else {
-            pages = 0;
+            run_length = 0;
         }
+
+        pmm.last_used_idx++;
     }
 
     return NULL;
 }
-
 void *pmm_alloc(size_t num_pages) {
     void *ptr = NULL;
 

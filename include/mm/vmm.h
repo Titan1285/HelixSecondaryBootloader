@@ -8,6 +8,22 @@
 
 
 
+
+
+extern uint8_t __stext;
+extern uint8_t __etext;
+
+extern uint8_t __srodata;
+extern uint8_t __erodata;
+
+extern uint8_t __sdata;
+extern uint8_t __edata;
+
+extern uint8_t __sbss;
+extern uint8_t __ebss;
+
+
+
 #define HHDM_BASE   0xFFFF000000000000ULL
 
 #define virt_to_phys(va) ((uint64_t)((uint64_t)(va) - HHDM_BASE))

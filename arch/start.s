@@ -57,8 +57,8 @@ zero_bss_loop:
 
 zero_bss_done:
 
-    // Init stack space at end of DRAM (TODO: Maybe place in better location?)
-    ldr x4, =0x60000000
+    // Initialize stack space
+    ldr x4, =__estack
     mov sp, x4
 
     // Initialize vector table

@@ -25,6 +25,8 @@
 .global sctlr_el2_read
 .global sctlr_el2_write
 
+.global mair_el2_read
+.global mair_el2_write
 
 
 
@@ -41,6 +43,14 @@
 
 
 
+
+mair_el2_read:
+	mrs x0, mair_el2
+	ret
+
+mair_el2_write:
+	msr mair_el2, x0
+	ret
 
 sctlr_el2_read:
 	mrs x0, sctlr_el2
@@ -48,7 +58,6 @@ sctlr_el2_read:
 
 sctlr_el2_write:
 	msr sctlr_el2, x0
-	isb
 	ret
 
 tcr_el2_read:
@@ -57,7 +66,6 @@ tcr_el2_read:
 
 tcr_el2_write:
 	msr tcr_el2, x0
-	isb
 	ret
 
 ttbr0_el2_read:
@@ -66,17 +74,14 @@ ttbr0_el2_read:
 
 ttbr0_el2_write:
 	msr ttbr0_el2, x0
-	isb
 	ret
 
 disable_irqs:
 	msr DAIFSet, #3
-	isb
 	ret
 
 enable_irqs:
 	msr DAIFClr, #3
-	isb
 	ret
 
 cnthp_ctl_el2_read:
@@ -85,12 +90,10 @@ cnthp_ctl_el2_read:
 
 cnthp_ctl_el2_write:
 	msr cnthp_ctl_el2, x0
-	isb
 	ret
 
 cnthp_cval_el2_write:
 	msr cnthp_cval_el2, x0
-	isb
 	ret
 
 
@@ -98,37 +101,30 @@ cnthp_cval_el2_write:
 
 icc_pmr_el1_write:
 	msr ICC_PMR_EL1, x0
-	isb
 	ret
 
 icc_igrpen0_write:
 	msr ICC_IGRPEN0_EL1, x0
-	isb
 	ret
 
 icc_igrpen1_write:
 	msr ICC_IGRPEN1_EL1, x0
-	isb
 	ret
 
 icc_bpr1_write:
 	msr ICC_BPR1_EL1, x0
-	isb
 	ret
 
 icc_iar1_el1_read:
 	mrs x0, ICC_IAR1_EL1
-	isb
 	ret
 
 icc_eoir1_el1_write:
 	msr ICC_EOIR1_EL1, x0
-	isb
 	ret
 
 icc_ctlr_el1_write:
 	msr ICC_CTLR_EL1, x0
-	isb
 	ret
 
 
@@ -139,8 +135,11 @@ icc_ctlr_el1_write:
 arch_jump_ub:
 	// x0 -> U-Boot base address
 
-	mov x15, x0
-	ldr x0, =0x40400000
+	ldr x1, =0x41414141
+	b .
+
+	// mov x15, x0
+	// ldr x0, =0x40400000
 
 	// TODO: Fix illegal instruction fetch attempting to drop to EL1...
 
@@ -151,7 +150,7 @@ arch_jump_ub:
 	// msr hcr_el2, x4
 	// isb
 
-	br x15
+	//br x15
 
 	//mov x4, #0x39C
 	//msr spsr_el2, x4

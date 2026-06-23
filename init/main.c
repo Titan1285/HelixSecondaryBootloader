@@ -34,12 +34,14 @@ void sbl_main(void) {
     printf("******************************\n\n");
 
     pmm_init();
+    vmm_init();
     slab_init();
     timer_init();
     sdhci_init();
     mbr_init();
     gpt_init();
-    
+
+    printf("Init done!\n");
 
     while(1);
     __builtin_unreachable();

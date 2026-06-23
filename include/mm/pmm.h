@@ -9,12 +9,11 @@
 
 
 
-extern uint8_t __ebss;
 
 
 
 #define RAM_BASE    0x40000000
-#define RAM_SIZE    0x20000000  // 512MB
+#define RAM_SIZE    0x3FFF0000 // 1GB total (minus 16MB for framebuffer)
 
 
 

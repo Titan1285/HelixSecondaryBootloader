@@ -220,4 +220,7 @@ extern void flush_cache_range(uint64_t base_addr, size_t length);
 
 extern void arch_jump_ub(uint64_t addr);
 
+extern uint64_t mair_el2_read(void);
+extern void mair_el2_write(uint64_t val);
+
 #endif

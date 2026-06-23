@@ -18,28 +18,25 @@ PHDRS
 
 SECTIONS
 {
-    /* NOTE: update address if this changes in ROM */
-    . = 0x00022450;
+    . = 0x0006E000;
 
     .text : {
         __stext = .;
         KEEP(*(.text.boot));
-        *(.text);
+        KEEP(*(.text.vectors));
+        *(.text*);
         __etext = .;
     } :text
 
-    /* Vector table must come after. Linker seems to pull weird stunts otherwise */
-    .vectors : {
-        __svectors = .;
-        KEEP(*(.vectors));
-        __evectors = .;
-    } :text
+    . = ALIGN(CONSTANT(MAXPAGESIZE));
 
     .rodata : {
         __srodata = .;
-        *(.rodata);
+        *(.rodata*);
         __erodata = .;
     } :rodata
+
+    . = ALIGN(CONSTANT(MAXPAGESIZE));
 
     .data : {
         __sdata = .;
@@ -52,6 +49,10 @@ SECTIONS
         *(.bss*);
         *(COMMON);
         __ebss = .;
+
+        __sstack = .;
+        . += 65536;
+        __estack = .;
     } :data
 
     /DISCARD/ : {

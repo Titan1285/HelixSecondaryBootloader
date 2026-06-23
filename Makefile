@@ -24,6 +24,12 @@ CFLAGS	?=	\
 	-Wno-unused-function \
 	-Wno-unused-variable
 
+LDFLAGS	?= \
+	-T helix.ld \
+	-z max-page-size=0x1000 \
+	-nostdlib \
+	-static
+
 
 ARCH_LIBS	:= \
 	arch/start.o \
@@ -69,7 +75,8 @@ LIB_OBJS	:= \
 MM_LIBS		:= \
 	mm/pmm.o \
 	mm/slab.o \
-	mm/alloc.o
+	mm/alloc.o \
+	mm/vmm.o
 
 SRC_OBJS	:= \
 	init/main.o \
@@ -94,7 +101,7 @@ $(TARGET).bin: $(TARGET).elf
 
 $(TARGET).elf: $(SRC_OBJS)
 	@echo "LD	$(TARGET).elf"
-	@$(LD) -T helix.ld $(SRC_OBJS) -o $(TARGET).elf -nostdlib
+	@$(LD) $(LDFLAGS) $(SRC_OBJS) -o $(TARGET).elf
 
 %.o: %.c
 	@echo "CC	$<"

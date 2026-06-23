@@ -1,4 +1,4 @@
-.section .vectors, "ax"
+.section .text.vectors, "ax"
 .global vector_table
 
 

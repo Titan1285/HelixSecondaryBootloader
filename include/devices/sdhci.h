@@ -27,7 +27,7 @@
 #define SDHCI_RESP_ERR_CHK_EN       (1UL << 7UL)
 #define SDHCI_RESP_TYPE             (1UL << 6UL)
 #define SDHCI_MULTI_BLOCK_SEL       (1UL << 5UL)
-#define SDHCI_TRANFER_DIRECT_SEL    (1UL << 4UL)
+#define SDHCI_TRANSFER_DIRECT_SEL   (1UL << 4UL)
 #define SDHCI_AUTO_CMD12_EN         (1UL << 3UL)
 #define SDHCI_AUTO_CMD23_EN         (2UL << 3UL)
 #define SHDIC_AUTO_CMD_SEL          (3UL << 3UL)
@@ -319,7 +319,8 @@ void sdhci_reset(void);
 void sdhci_set_clock(uint32_t target);
 void sdhci_irq_handler(void);
 int sdhci_read_block(uint32_t lba, uint8_t *buf);
+int sdhci_write_block(uint32_t lba, uint8_t *buf);
 int sdhci_read_blocks(uint32_t lba, uint32_t length, uint8_t *buf);
-int sdhci_dma_read(uint32_t lba, uint32_t length, uint8_t *buf);
+int sdhci_write_blocks(uint32_t lba, uint32_t length, uint8_t *buf);
 
 #endif

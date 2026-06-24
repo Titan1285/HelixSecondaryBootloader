@@ -67,7 +67,6 @@ LIB_OBJS	:= \
 	lib/strlen.o \
 	lib/utoa64.o \
 	lib/strcmp.o \
-	lib/pkg.o \
 	lib/mbr.o \
 	lib/gpt.o \
 	lib/utf16_to_utf8.o

@@ -448,7 +448,7 @@ void sdhci_init(void) {
 
 int sdhci_read_block(uint32_t lba, uint8_t *buf) {
     int ret = 0;
-    uint16_t mode = SDHCI_BLOCK_EN | SDHCI_TRANFER_DIRECT_SEL;
+    uint16_t mode = SDHCI_BLOCK_EN | SDHCI_TRANSFER_DIRECT_SEL;
 
 
 
@@ -509,44 +509,62 @@ int sdhci_read_blocks(uint32_t lba, uint32_t length, uint8_t *buf) {
     return 0;
 }
 
-int sdhci_dma_read(uint32_t lba, uint32_t length, uint8_t *buf) {
+int sdhci_write_block(uint32_t lba, uint8_t *buf) {
     int ret = 0;
-    sdhci_adma_desc_t *desc = NULL;
-    uint32_t blocks = 0;
+    uint16_t mode = SDHCI_BLOCK_EN | SDHCI_TRANSFER_DIRECT_SEL;
 
 
 
 
-    if (!buf) {
-        return -1;
-    }
 
-    // TODO: Maybe make this global?
-    desc = alloc(sizeof(sdhci_adma_desc_t));
 
-    if (!desc) {
-        printf("Failed to allocate SDHCI ADMA descriptor!\n");
-        return -1;
-    }
-
-    blocks = length / sdhci->block_size;
-
-    desc->addr = (uint64_t)buf;
-    desc->len = blocks * 512;
-    desc->attributes = ADMA2_VALID | ADMA2_END | ADMA2_ACT2;
-
-    sdhci_write32(SDHCI_ADMA_SYSTEM_ADDRESS, (uint64_t)desc);
-
+    // Setup block size and number of blocks to read
     sdhci_write16(SDHCI_BLOCK_SIZE, sdhci->block_size);
-    sdhci_write16(SDHCI_BLOCK_COUNT, blocks);
+    sdhci_write16(SDHCI_BLOCK_COUNT, 1);
 
-    sdhci_write16(SDHCI_TRANSFER_MODE, SDHCI_BLOCK_EN | SDHCI_MULTI_BLOCK_SEL | SDHCI_DMA_EN | SDHCI_AUTO_CMD12_EN);
-    
-    ret = sdhci_send_cmd(18, lba * 512, SDHCI_RESP_TYPE_LEN_48 | SDHCI_CMD_CRC_CHK_EN | SDHCI_DATA_PRESENT_SEL);
+    // Specify transfer mode
+    sdhci_write16(SDHCI_TRANSFER_MODE, mode);
+
+    // NOTE: Argument is the LBA address of the EMMC/SD
+    ret = sdhci_send_cmd(24, lba * 512, SDHCI_RESP_TYPE_LEN_48 | SDHCI_CMD_CRC_CHK_EN | SDHCI_DATA_PRESENT_SEL);
 
     if (ret < 0) {
-        printf("SDHCI CMD18 failed!\n");
         return ret;
+    }
+
+    // Wait for data to become available
+    while(!(sdhci_read16(SDHCI_INTERRUPT_STATUS) & SDHCI_BUFFER_WRITE_READY));
+
+    // Read data from buffer
+    uint32_t *data = (uint32_t *)buf;
+    for (uint32_t i = 0; i < (512 / 4); i++) {
+        sdhci_write32(SDHCI_BUFFER, *data++);
+    }
+
+    // Ack buffer write
+    sdhci_write16(SDHCI_INTERRUPT_STATUS, SDHCI_BUFFER_WRITE_READY | SDHCI_TRANSFER_COMPLETE);
+
+    return 0;
+}
+
+int sdhci_write_blocks(uint32_t lba, uint32_t length, uint8_t *buf) {
+    int ret = 0;
+
+    uint32_t blocks = length / sdhci->block_size;
+    uint32_t lba_base = lba;
+
+    uint32_t i = 0;
+    while(blocks > 0) {
+        ret = sdhci_write_block(lba_base, buf + (i * sdhci->block_size));
+
+        if (ret < 0) {
+            printf("Failed to write LBA %x\n", lba_base);
+            return ret;
+        }
+
+        i++;
+        lba_base++;
+        blocks--;
     }
 
     return 0;

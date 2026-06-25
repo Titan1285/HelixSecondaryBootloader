@@ -100,11 +100,11 @@ uint64_t *vmm_page_table_alloc(void) {
 
     pt = pmm_alloc(1);
 
-    flush_cache_range((uint64_t)pt, PAGE_SIZE);
-
     if (!pt) {
         return NULL;
     }
+
+    flush_cache_range((uint64_t)pt, PAGE_SIZE);
 
     memset((uint64_t *)((uint64_t)pt), 0, PAGE_SIZE);
 

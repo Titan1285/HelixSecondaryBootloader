@@ -13,6 +13,7 @@ typedef __uint128_t uint128_t;
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+#define __assert_fail(...)
 
 
 

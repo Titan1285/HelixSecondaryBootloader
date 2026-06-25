@@ -81,7 +81,7 @@ uint32_t gpt_partition_get_index(const char *s) {
 
 
     if (!s) {
-        return NULL;
+        return -1;
     }
 
     for (uint32_t i = 0; i < gpt->num_partitions; i++) {

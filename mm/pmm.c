@@ -68,16 +68,17 @@ void pmm_init(void) {
     pmm.free_pages = pmm.total_pages - first_free;
     pmm.last_used_idx = first_free;
 
-    printf("PMM information:\n\n");
+    printf("PMM information:\n");
     printf("RAM base:       %llx\n", pmm.ram_base);
-    printf("RAM size:       %llu\n", pmm.ram_size);
+    printf("RAM end:        %llx\n", pmm.ram_base + pmm.ram_size);
+    printf("RAM size:       %lluMB\n", pmm.ram_size / (1024 * 1024));
 
     printf("Total pages:    %llu\n", pmm.total_pages);
     printf("Used pages:     %llu\n", pmm.used_pages);
     printf("Free pages:     %llu\n", pmm.free_pages);
     printf("Reserved pages: %llu\n", pmm.reserved_pages);
 
-    printf("Bitmap size:    %llu\n", pmm.bitmap_size);
+    printf("Bitmap size:    %lluKB\n", pmm.bitmap_size / 1024);
     printf("Bitmap base:    %llx\n", (uint64_t)pmm.bitmap);
 }
 

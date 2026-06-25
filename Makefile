@@ -47,7 +47,10 @@ HW_OBJS		:= \
 	devices/fw_cfg.o
 
 GFX_LIBS	:= \
-	gfx/put_pixel.o
+	gfx/gfx_init.o \
+	gfx/gfx_put_pixel.o \
+	gfx/gfx_draw_rect.o \
+	gfx/bmp_display.o
 
 LIB_OBJS	:= \
 	lib/puts.o \
@@ -69,7 +72,12 @@ LIB_OBJS	:= \
 	lib/strcmp.o \
 	lib/mbr.o \
 	lib/gpt.o \
-	lib/utf16_to_utf8.o
+	lib/utf16_to_utf8.o \
+	lib/adler32.o \
+	lib/crc32.o \
+	lib/tinfgzip.o \
+	lib/tinflate.o \
+	lib/tinfzlib.o
 
 MM_LIBS		:= \
 	mm/pmm.o \

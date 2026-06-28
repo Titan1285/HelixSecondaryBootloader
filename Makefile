@@ -77,7 +77,8 @@ LIB_OBJS	:= \
 	lib/crc32.o \
 	lib/tinfgzip.o \
 	lib/tinflate.o \
-	lib/tinfzlib.o
+	lib/tinfzlib.o \
+	lib/pkg.o
 
 MM_LIBS		:= \
 	mm/pmm.o \

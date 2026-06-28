@@ -25,4 +25,28 @@ typedef struct {
     char        name[128];
 } __attribute__((packed)) pkg_table_t;
 
+typedef struct {
+    pkg_header_t    *hdr;   // Main header
+    pkg_table_t     *tbl;   // Table entries
+    void            *data;  // Raw pkg file data
+} pkg_t;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pkg_t *pkg_init(void *buf);
+pkg_table_t *pkg_entry_for_each(pkg_t *pkg, uint32_t idx);
+pkg_table_t *pkg_get_table_by_name(pkg_t *pkg, const char *s);
+
 #endif

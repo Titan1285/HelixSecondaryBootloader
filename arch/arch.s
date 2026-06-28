@@ -131,34 +131,24 @@ icc_ctlr_el1_write:
 
 
 
-.global arch_jump_ub
-arch_jump_ub:
-	// x0 -> U-Boot base address
+.global arch_jump_apps_bl
+arch_jump_apps_bl:
+	// x0 = Apps bootloader base
 
-	ldr x1, =0x41414141
-	b .
+	mrs x4, hcr_el2
+	bic x4, x4, #(1 << 3)	// FIQ's taken to EL1
+	bic x4, x4, #(1 << 4)	// IRQ's taken to EL1
+	bic x4, x4, #(1 << 5)	// External aborts taken to EL1
+	orr x4, x4, #(1 << 31)	// EL1 is AARCH64
+	msr hcr_el2, x4
+	isb
 
-	// mov x15, x0
-	// ldr x0, =0x40400000
+	ldr x4, =0x3C5
+	msr spsr_el2, x4
+	isb
 
-	// TODO: Fix illegal instruction fetch attempting to drop to EL1...
+	msr elr_el2, x0
+	isb
 
-	// mrs x4, hcr_el2
-	// bic x4, x4, #(1 << 3)	// IRQ's routed to EL1
-	// bic x4, x4, #(1 << 4)	// FIQ's fouted to EL1
-	// bic x4, x4, #(1 << 5)	// External aborts routed to EL1 
-	// msr hcr_el2, x4
-	// isb
-
-	//br x15
-
-	//mov x4, #0x39C
-	//msr spsr_el2, x4
-	//isb
-
-	// Set return address to U-Boot base
-	//msr elr_el2, x0
-	//isb
-
-	// Jump to U-Boot
-	//eret
+	// Jump to AppsBoot
+	eret
